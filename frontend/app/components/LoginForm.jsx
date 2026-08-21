@@ -18,6 +18,7 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         try {
             const response = await api.post('/auth/login', formData);
             localStorage.setItem('token', response.data.token); // Store token in localStorage
@@ -26,8 +27,11 @@ const LoginForm = () => {
             console.log('Login successful:', response.data);
             router.push('/dashboard'); // Redirect to dashboard on successful login
         } catch (error) {
-            console.log(error.response.data);
-            setError(error.response.data.message);
+            console.error('Login failed:', error);
+            setError(
+                error.response?.data?.message ||
+                'Unable to connect to the server. Please make sure the API is running.'
+            );
         }
     };
 

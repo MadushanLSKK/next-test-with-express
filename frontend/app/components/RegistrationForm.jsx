@@ -26,13 +26,18 @@ const RegistrationForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         setLoading(true);
         try {
             const response = await api.post('/auth/register', formData);
             console.log('Registration successful:', response.data);
             router.push('/login'); // Redirect to login page on successful registration
         } catch (error) {
-            setError(error.response.data.message);
+            console.error('Registration failed:', error);
+            setError(
+                error.response?.data?.message ||
+                'Unable to connect to the server. Please make sure the API is running.'
+            );
             
         } finally {
             setLoading(false);
