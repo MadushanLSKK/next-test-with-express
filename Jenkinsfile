@@ -14,7 +14,17 @@ pipeline {
             }
         }
 
-        stage('2. SonarQube Code Analysis') {
+        stage('2. Prepare Environment') {
+            steps {
+                // Ensure backend directory and dummy .env exist if ignored by git
+                sh '''
+                mkdir -p backend
+                touch backend/.env
+                '''
+            }
+        }
+
+        stage('3. SonarQube Code Analysis') {
             steps {
                 script {
                     echo 'Running static code analysis...'
@@ -29,19 +39,19 @@ pipeline {
             }
         }
 
-        stage('3. Validate Compose Config') {
+        stage('4. Validate Compose Config') {
             steps {
                 sh 'docker compose config'
             }
         }
 
-        stage('4. Build Images') {
+        stage('5. Build Images') {
             steps {
                 sh 'docker compose build --no-cache'
             }
         }
 
-        stage('5. Deploy Containers') {
+        stage('6. Deploy Containers') {
             steps {
                 sh 'docker compose up -d'
             }
@@ -51,7 +61,7 @@ pipeline {
     post {
         failure {
             echo 'Pipeline failed! Cleaning up...'
-            sh 'docker compose down'
+            sh 'docker compose down --remove-orphans || true'
         }
         always {
             sh 'docker image prune -f'
