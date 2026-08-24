@@ -16,7 +16,6 @@ pipeline {
 
         stage('2. Prepare Environment') {
             steps {
-                // Ensure backend directory and dummy .env exist if ignored by git
                 sh '''
                 mkdir -p backend
                 touch backend/.env
@@ -33,7 +32,9 @@ pipeline {
                       -v "$WORKSPACE:/usr/src" \
                       sonarsource/sonar-scanner-cli \
                       -Dsonar.host.url=http://host.docker.internal:9000 \
-                      -Dsonar.token=${SONAR_TOKEN}
+                      -Dsonar.token=${SONAR_TOKEN} \
+                      -Dsonar.projectKey=fullstack-devops-app \
+                      -Dsonar.sources=.
                     '''
                 }
             }
