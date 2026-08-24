@@ -33,14 +33,15 @@ pipeline {
                     echo 'Running static code analysis...'
                     sh '''
                     docker run --rm \
-                      -v "$WORKSPACE:/usr/src" \
+                      --workdir /usr/src \
+                      -v "${WORKSPACE}:/usr/src" \
                       sonarsource/sonar-scanner-cli \
                       -Dsonar.host.url=http://host.docker.internal:9000 \
                       -Dsonar.token=${SONAR_TOKEN} \
                       -Dsonar.projectKey=fullstack-devops-app \
-                      -Dsonar.sources=. \
-                      -Dsonar.exclusions="**/node_modules/**,**/.next/**,**/build/**,**/dist/**" \
-                      -Dsonar.inclusions="**/*.js,**/*.jsx,**/*.ts,**/*.tsx" \
+                      -Dsonar.projectName="Fullstack Docker DevOps Project" \
+                      -Dsonar.sources=/usr/src \
+                      -Dsonar.exclusions="**/node_modules/**,**/.next/**,**/build/**,**/dist/**,**/.git/**" \
                       -Dsonar.scm.disabled=true
                     '''
                 }
