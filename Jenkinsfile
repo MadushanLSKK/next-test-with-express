@@ -15,10 +15,13 @@ pipeline {
 
         stage('2. Prepare Environment') {
             steps {
-                withCredentials([string(credentialsId: 'MONGO_URI_SECRET', variable: 'SECRET_URI')]) {
+                withCredentials([
+                    string(credentialsId: 'MONGO_URI_SECRET', variable: 'SECRET_URI'),
+                    string(credentialsId: 'JWT_SECRET', variable: 'SECRET_JWT')
+                ]) {
                     sh """
                     mkdir -p backend
-                    printf "MONGO_URI=%s\\n" "${SECRET_URI}" > backend/.env
+                    printf "MONGO_URI=%s\\nJWT_SECRET=%s\\nPORT=5000\\n" "${SECRET_URI}" "${SECRET_JWT}" > backend/.env
                     """
                 }
             }
