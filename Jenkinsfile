@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         SONAR_TOKEN = 'squ_463dd0aceb171886649ddbc906a9ddd97ef82d4b'
-        // Retrieve secret securely from Jenkins credential store
         MONGO_URI   = credentials('MONGO_URI_SECRET')
         DOCKER_BUILDKIT = '1'
     }
@@ -17,11 +16,11 @@ pipeline {
 
         stage('2. Prepare Environment') {
             steps {
-                // Write the environment variable to a local .env file INSIDE the container workspace only
-                sh '''
+                // Double quotes (""") allow Groovy to expand the MONGO_URI variable into the .env file
+                sh """
                 mkdir -p backend
                 echo "MONGO_URI=${MONGO_URI}" > backend/.env
-                '''
+                """
             }
         }
 
