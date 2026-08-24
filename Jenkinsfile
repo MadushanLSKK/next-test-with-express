@@ -32,10 +32,8 @@ pipeline {
                 script {
                     echo 'Running static code analysis...'
                     sh '''
-                    docker run --rm \
-                      -v "$WORKSPACE:/usr/src" \
-                      -w /usr/src \
-                      sonarsource/sonar-scanner-cli \
+                    # Create a temporary container
+                    docker create --name sonar_runner sonarsource/sonar-scanner-cli \
                       -Dsonar.host.url=http://host.docker.internal:9000 \
                       -Dsonar.token=${SONAR_TOKEN} \
                       -Dsonar.projectKey=fullstack-devops-app \
@@ -43,6 +41,13 @@ pipeline {
                       -Dsonar.sources=backend,frontend \
                       -Dsonar.exclusions="**/node_modules/**,**/.next/**,**/build/**,**/dist/**,**/.git/**" \
                       -Dsonar.scm.disabled=true
+
+                    # Copy workspace files directly into container working directory
+                    docker cp . sonar_runner:/usr/src
+
+                    # Start scanner container and cleanup afterwards
+                    docker start -a sonar_runner || true
+                    docker rm -f sonar_runner
                     '''
                 }
             }
