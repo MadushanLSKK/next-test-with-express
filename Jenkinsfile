@@ -37,7 +37,12 @@ pipeline {
                       -w /usr/src \
                       sonarsource/sonar-scanner-cli \
                       -Dsonar.host.url=http://host.docker.internal:9000 \
-                      -Dsonar.token=${SONAR_TOKEN}
+                      -Dsonar.token=${SONAR_TOKEN} \
+                      -Dsonar.projectKey=fullstack-devops-app \
+                      -Dsonar.projectName="Fullstack Docker DevOps Project" \
+                      -Dsonar.sources=backend,frontend \
+                      -Dsonar.exclusions="**/node_modules/**,**/.next/**,**/build/**,**/dist/**,**/.git/**" \
+                      -Dsonar.scm.disabled=true
                     '''
                 }
             }
