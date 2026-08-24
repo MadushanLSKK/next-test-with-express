@@ -16,11 +16,11 @@ pipeline {
 
         stage('2. Prepare Environment') {
             steps {
-                // Double quotes (""") allow Groovy to expand the MONGO_URI variable into the .env file
-                sh """
-                mkdir -p backend
-                echo "MONGO_URI=${MONGO_URI}" > backend/.env
-                """
+               withCredentials([string(credentialsId: 'MONGO_URI_SECRET', variable: 'SECRET_URI')]) {
+                    sh """
+                    mkdir -p backend
+                    printf "MONGO_URI=%s\\n" "${SECRET_URI}" > backend/.env
+                    """
             }
         }
 
