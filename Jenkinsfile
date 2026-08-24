@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         SONAR_TOKEN = 'squ_463dd0aceb171886649ddbc906a9ddd97ef82d4b'
-        MONGO_URI   = credentials('MONGO_URI_SECRET')
         DOCKER_BUILDKIT = '1'
     }
 
@@ -16,11 +15,12 @@ pipeline {
 
         stage('2. Prepare Environment') {
             steps {
-               withCredentials([string(credentialsId: 'MONGO_URI_SECRET', variable: 'SECRET_URI')]) {
+                withCredentials([string(credentialsId: 'MONGO_URI_SECRET', variable: 'SECRET_URI')]) {
                     sh """
                     mkdir -p backend
                     printf "MONGO_URI=%s\\n" "${SECRET_URI}" > backend/.env
                     """
+                }
             }
         }
 
