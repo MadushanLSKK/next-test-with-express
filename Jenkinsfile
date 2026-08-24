@@ -38,7 +38,7 @@ pipeline {
                       -Dsonar.host.url=http://host.docker.internal:9000 \
                       -Dsonar.token=${SONAR_TOKEN} \
                       -Dsonar.projectKey=fullstack-devops-app \
-                      -Dsonar.sources=frontend,backend \
+                      -Dsonar.sources=. \
                       -Dsonar.exclusions="**/node_modules/**,**/.next/**,**/build/**,**/dist/**" \
                       -Dsonar.inclusions="**/*.js,**/*.jsx,**/*.ts,**/*.tsx" \
                       -Dsonar.scm.disabled=true
@@ -46,7 +46,6 @@ pipeline {
                 }
             }
         }
-
         stage('4. Validate Compose Config') {
             steps {
                 sh 'docker compose config'
