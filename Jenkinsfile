@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = 'squ_463dd0aceb171886649ddbc906a9ddd97ef82d4b'
+        SONAR_TOKEN = 'squ_033090b92e58184a89f93763d62f916d0d3449d7'
         DOCKER_BUILDKIT = '1'
     }
 
